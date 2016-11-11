@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
 
-  var users = ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"];
+  var users = ["ESL_SC2", "OgamingSC2", "cretetion", "freecodecamp", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas", "comster404", "brunofin"];
 
   function getData(type, username) {
     return Promise.resolve($.ajax({
@@ -95,6 +95,12 @@ $(document).ready(function () {
 
   $(document).on("click", ".currentlyPlaying", function () {
     var name = $(this).siblings(".nameAndStatus").children(".channelName").text();
+    var pageURL = "https://www.twitch.tv/" + name;
+    window.open(pageURL);
+  });
+
+  $(document).on("click", ".status", function () {
+    var name = $(this).siblings(".channelName").text();
     var pageURL = "https://www.twitch.tv/" + name;
     window.open(pageURL);
   });
