@@ -12,7 +12,7 @@ $(document).ready(function () {
   }
 
   function getChannelData() {
-    users.forEach(function (username) {
+    users.forEach(function (username, index) {
       var channelData = getData("channels", username);
       var streamData = getData("streams", username);
       var logo = "";
@@ -38,29 +38,48 @@ $(document).ready(function () {
         html += status + "</span></div><span class='currentlyPlaying'>" + nowPlaying + "</span></div></div>";
         $("#channelsSection").append(html);
         html = "";
+      }).catch(function (reason) {
+        errorGettingData(reason.responseJSON.message);
       }).then(function () {
-        $(".status").each(function (value) {
-          if ($(this).text() === "Offline") {
-            $(this).addClass("offline");
-          } else {
-            $(this).addClass("online");
-          }
-        });
+        setStatus(index, users);
       });
     });
   }
 
-  (function setStatus() {
-    getChannelData();
+  function setStatus(index, users) {
+    if (index === users.length - 1) {
+      $(".status").each(function (value) {
+        if ($(this).text() === "Offline") {
+          $(this).addClass("offline");
+        } else if ($(this).text() === "Online") {
+          $(this).addClass("online");
+        }
+      });
+    }
+  }
 
-  })();
+  function errorGettingData(username) {
+    var html = "";
+    var logo = "https://dummyimage.com/50x50/ecf0e7/5c5457.jpg&text=0x3F";
+    var name = username;
+    var status = "Offline";
+
+    html += "<div class='row channelsRow'><div class='col-xs-12 channelsColumn'>";
+    html += "<img src='" + logo + "' class='img-responsive img-circle'>" + "<div><span class='channelName'>" + name + "</span>" + "<span class='status'>";
+    html += status + "</span></div></div></div>";
+    $("#channelsSection").append(html);
+  }
+
+
+  getChannelData();
+
 
   function setStatusVisibility() {
     $("#onlineClicked").attr("style", "visibility: hidden;");
     $("#offlineClicked").attr("style", "visibility: hidden;");
     $("#allClicked").attr("style", "visibility: hidden;");
     $("#online").removeClass("clicked");
-    $("#offline").removeClass("clicked");
+    $("#offline").removeClass("clicked"); '/'
     $("#all").removeClass("clicked");
     $("#online").addClass("unclicked");
     $("#offline").addClass("unclicked");
@@ -82,27 +101,35 @@ $(document).ready(function () {
   });
 
   $(document).on("click", ".img-circle", function () {
-    var name = $(this).siblings(".nameAndStatus").children(".channelName").text();
-    var pageURL = "https://www.twitch.tv/" + name;
-    window.open(pageURL);
+    var name = $(this).siblings().children(".channelName").text();
+    if (name.indexOf("does not exist") < 0) {
+      var pageURL = "https://www.twitch.tv/" + name;
+      window.open(pageURL);
+    }
   });
 
   $(document).on("click", ".channelName", function () {
     var name = $(this).text();
-    var pageURL = "https://www.twitch.tv/" + name;
-    window.open(pageURL);
+    if (name.indexOf("does not exist") < 0) {
+      var pageURL = "https://www.twitch.tv/" + name;
+      window.open(pageURL);
+    }
   });
 
   $(document).on("click", ".currentlyPlaying", function () {
     var name = $(this).siblings(".nameAndStatus").children(".channelName").text();
-    var pageURL = "https://www.twitch.tv/" + name;
-    window.open(pageURL);
+    if (name.indexOf("does not exist") < 0) {
+      var pageURL = "https://www.twitch.tv/" + name;
+      window.open(pageURL);
+    }
   });
 
   $(document).on("click", ".status", function () {
     var name = $(this).siblings(".channelName").text();
-    var pageURL = "https://www.twitch.tv/" + name;
-    window.open(pageURL);
+    if (name.indexOf("does not exist") < 0) {
+      var pageURL = "https://www.twitch.tv/" + name;
+      window.open(pageURL);
+    }
   });
 
 });
